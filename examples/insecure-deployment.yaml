@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: insecure-dep
+  name: insecure-dep
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: insecure-dep
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: insecure-dep
+    spec:
+      containers:
+      - image: ubuntu:latest
+        name: ubuntu
+        command: ["sleep", "infinity"]
+        resources:
+          limits:
+            memory: "100Mi"
+            cpu: "10m"
+      - image: redis
+        name: redis
+        resources:
+          limits:
+            memory: "100Mi"
+            cpu: "100m"
+      initContainers:
+      - image: busybox:latest
+        name: busybox
+        command: ["echo", "Initialization complete!"]
+        resources: {}
